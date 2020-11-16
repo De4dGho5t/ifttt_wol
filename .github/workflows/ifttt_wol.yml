@@ -1,0 +1,13 @@
+name: IFTTT WOL
+on: [push]
+jobs:
+  build_docker_image:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v1
+    - name: Build docker image
+      run:  docker build --build-arg ARG_ULTRAHOOK_API_KEY=$ENV_ULTRAHOOK_API_KEY --build-arg ARG_ULTRAHOOK_SUB_DOMAIN=$ENV_ULTRAHOOK_SUB_DOMAIN -t test_wol .
+      env:
+        ENV_ULTRAHOOK_API_KEY: ${{ secrets.ENV_ULTRAHOOK_API_KEY }}
+        ENV_ULTRAHOOK_SUB_DOMAIN: wol

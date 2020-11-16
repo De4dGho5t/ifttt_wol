@@ -5,9 +5,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - uses: actions/setup-node@v1
     - name: Build docker image
-      run:  docker build --build-arg ARG_ULTRAHOOK_API_KEY=$ENV_ULTRAHOOK_API_KEY --build-arg ARG_ULTRAHOOK_SUB_DOMAIN=$ENV_ULTRAHOOK_SUB_DOMAIN -t test_wol .
+      run: docker build --build-arg ARG_ULTRAHOOK_API_KEY=$ENV_ULTRAHOOK_API_KEY --build-arg ARG_ULTRAHOOK_SUB_DOMAIN=$ENV_ULTRAHOOK_SUB_DOMAIN -t $ENV_DOCKER_TAG .
+      run: echo "$PAT" | docker login -u De4dGho5t --password-stdin docker.pkg.github.com
+      run: docker tag $ENV_DOCKER_TAG docker.pkg.github.com/de4dgho5t/ifttt_wol/$ENV_DOCKER_IMAGE_NAME:$ENV_DOKCER_VERSION
+      run: docker push docker.pkg.github.com/de4dgho5t/ifttt_wol/$ENV_DOCKER_IMAGE_NAME:$ENV_DOKCER_VERSION
       env:
         ENV_ULTRAHOOK_API_KEY: ${{ secrets.ENV_ULTRAHOOK_API_KEY }}
         ENV_ULTRAHOOK_SUB_DOMAIN: wol
+        ENV_DOCKER_IMAGE_NAME: ifttt_wol
+        ENV_DOCKER_TAG: test_build
+        ENV_DOKCER_VERSION: dev
